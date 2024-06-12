@@ -1,12 +1,13 @@
 # lib/cli.py
 
 from models.rate import Rate
-from models.database import initialize_database
+from models.employee import Employee
+from models.station import Station
+from models.vehicle import Vehicle
 
 import click
 import sqlite3
-from helpers import (
-    display_main_menu,
+from helpers import(
     get_input,
     get_float_input,
     get_int_input,
@@ -14,7 +15,13 @@ from helpers import (
     add_vehicle_to_database,
     get_all_vehicles,
     find_vehicle_by_id,
-    find_plate_number
+    find_plate_number,
+    list_employees,
+    find_employee_by_name,
+    find_employee_by_id,
+    create_employee,
+    update_employee,
+    delete_employee,
     list_all_payments,
     find_payment_by_id,
     find_payment_by_date,
@@ -23,14 +30,14 @@ from helpers import (
     list_all_stations,
     find_station_by_id,
     find_station_by_name
+    
     )
 
 DATABASE = 'expressway.db'
 
 def main():
-    initialize_database()
     while True:
-        display_main_menu()
+        menu()
         choice = get_input("> ")
         if choice == "0":
             exit_program()
@@ -42,6 +49,7 @@ def main():
             find_vehicle_by_id()
         elif choice == "4":
             find_plate_number()
+        elif choice == "22":
             list_all_payments()
         elif choice == "5":
             find_payment_by_id()
@@ -65,6 +73,18 @@ def main():
             update_rate()
         elif choice == "15":
             delete_rate()
+        elif choice == "16":
+            list_employees()
+        elif choice == "17":
+            find_employee_by_name()
+        elif choice == "18":
+            find_employee_by_id()
+        elif choice == "19":
+            create_employee()
+        elif choice == "20":
+            update_employee()
+        elif choice == "21":
+            delete_employee()
         else:
             print("Invalid choice")
 
@@ -80,11 +100,21 @@ def menu():
     print("6. Find a payment by id")
     print("7. Find a payment by date")
     print("8. Create a new payment")
-    print("9. Test our CLI")
+    print("9. List all stations")
     print("10. List all stations")
     print("11. Find a station by id")
     print("12. Find a station by name")
-   
+    print("13. List all rates")
+    print("14. Add a new rate")
+    print("15. Update a rate")
+    print("16. Delete a rate")
+    print("17. List all employees")
+    print("18. Find Employees by Id")
+    print("19. Create Employee")
+    print("20. Update Employee")
+    print("21. Delete Employee") 
+    
+
 def list_rates():
     rates = Rate.all()
     for rate in rates:
