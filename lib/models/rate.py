@@ -1,7 +1,6 @@
 # lib/models/rate.py
 
 import sqlite3
-from .database import DATABASE_NAME
 
 class Rate:
     def __init__(self, entry_point, exit_point, rate, rate_id=None):
@@ -9,6 +8,21 @@ class Rate:
         self.entry_point = entry_point
         self.exit_point = exit_point
         self.rate = rate
+
+    def create():
+        connection = sqlite3.connect('expressway.db')
+        cursor = connection.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS rates (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                entry_point TEXT NOT NULL,
+                exit_point TEXT NOT NULL,
+                rate REAL NOT NULL
+            )
+        ''')
+        connection.commit()
+        connection.close()
+
 
     def save(self):
         connection = sqlite3.connect(DATABASE_FILE)
@@ -30,7 +44,7 @@ class Rate:
 
     def delete(self):
         if self.id is not None:
-            connection = sqlite3.connect(DATABASE_FILE)
+            connection = sqlite3.connect('expressway.db')
             cursor = connection.cursor()
             cursor.execute('DELETE FROM rates WHERE id = ?', (self.id,))
             connection.commit()
