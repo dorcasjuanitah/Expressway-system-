@@ -1,7 +1,15 @@
 # lib/cli.py
+
+from models.rate import Rate
+from models.database import initialize_database
+
 import click
 import sqlite3
 from helpers import (
+    display_main_menu,
+    get_input,
+    get_float_input,
+    get_int_input,
     exit_program,
     add_vehicle_to_database,
     get_all_vehicles,
@@ -20,12 +28,13 @@ from helpers import (
 DATABASE = 'expressway.db'
 
 def main():
+    initialize_database()
     while True:
-        menu()
-        choice = input("> ")
+        display_main_menu()
+        choice = get_input("> ")
         if choice == "0":
             exit_program()
-        elif choice == "1":
+        if choice == "1":
             add_vehicle_to_database()
         elif choice == "2":
             get_all_vehicles()
@@ -48,6 +57,14 @@ def main():
             find_station_by_id()
         elif choice == "11":
             find_station_by_name()
+        elif choice == "12":
+            list_rates()
+        elif choice == "13":
+            add_rate()
+        elif choice == "14":
+            update_rate()
+        elif choice == "15":
+            delete_rate()
         else:
             print("Invalid choice")
 
@@ -68,7 +85,41 @@ def menu():
     print("11. Find a station by id")
     print("12. Find a station by name")
    
+def list_rates():
+    rates = Rate.all()
+    for rate in rates:
+        print(rate)
 
+def add_rate():
+    entry_point = get_input("Enter entry point: ")
+    exit_point = get_input("Enter exit point: ")
+    rate_value = get_float_input("Enter rate: ")
+    new_rate = Rate(entry_point, exit_point, rate_value)
+    new_rate.save()
+    print("Rate added successfully.")
+
+def update_rate():
+    rate_id = get_int_input("Enter rate ID to update: ")
+    rate = Rate.find_by_id(rate_id)
+    if rate:
+        entry_point = get_input("Enter new entry point: ")
+        exit_point = get_input("Enter new exit point: ")
+        rate_value = get_float_input("Enter new rate: ")
+        rate.entry_point = entry_point
+        rate.exit_point = exit_point
+        rate.rate = rate_value
+        rate.save()
+        print("Rate updated successfully.")
+    else:
+        print("Rate not found.")
+def delete_rate():
+    rate_id = get_int_input("Enter rate ID to delete: ")
+    rate = Rate.find_by_id(rate_id)
+    if rate:
+        rate.delete()
+        print("Rate deleted successfully.")
+    else:
+        print("Rate not found.")
 
 if __name__ == "__main__":
     main()
