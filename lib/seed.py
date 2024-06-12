@@ -1,11 +1,20 @@
-#!/usr/bin/env python3
 
 from models.__init__ import CONN, CURSOR
 from models.station import Station
+from models.vehicle import Vehicle
 
 def seed_database():
+    Vehicle.delete_table()
+    Vehicle.create_table()
     Station.drop_table()
     Station.create_table()
+
+    # Create seed data
+    vehicle_1 = Vehicle.create("KCA", "Alex" ,"0727222222")
+    vehicle_2 = Vehicle.create("KDA", "Dan", "0727222244")
+    vehicle_3 = Vehicle.create("KCK", "Dor", "0754555566")
+    vehicle_4 = Vehicle.create("KCM", "Shee", "0722226666")
+    vehicle_5 = Vehicle.create("HKDP", "Bree", "0782888888") 
 
     # Create seed data
     station_1 = Station.create("Westlands")
@@ -20,7 +29,6 @@ def seed_database():
     station_10 = Station.create("JKIA")
     station_11 = Station.create("SGR")
     station_12 = Station.create("Syokimau")
-
-
-seed_database()
-print("Seeded database")
+    
+    seed_database()
+    print("Seeded database")
