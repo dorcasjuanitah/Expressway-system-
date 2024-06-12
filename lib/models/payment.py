@@ -9,7 +9,7 @@ from models.charge import Charge
 
 class Payment:
     all = {}
-    def __init__(self, mode_of_payment,vehicle_plate, entry_station, exit_station, amount_paid, check_in_employee, check_out_employee, date, id=None):
+    def __init__(self, date, mode_of_payment,vehicle_plate, entry_station, exit_station, amount_paid, check_in_employee, check_out_employee, id=None):
         self.id=id
         self.date = date
         self.mode_of_payment = mode_of_payment
@@ -236,6 +236,33 @@ class Payment:
         rows = CURSOR.execute(sql).fetchall()
 
         return [cls.instance_from_db(row) for row in rows]
+    
+    # @classmethod
+    # def get_all_joined(cls):
+    #     """Return a joined list containing one Payment object per table row"""
+    #     sql = """
+    #         SELECT 
+    #         payments.date AS date, payments.mode_of_payment AS mode_of_payment, 
+    #         vehicles.plate_number AS number_plate,
+    #         stations.name AS entry_station,
+    #         stations.name AS exit_station,
+    #         employees.name AS check_in_employee,
+    #         employees.name AS check_out_employee
+    #         FROM payments
+    #         INNER JOIN vehicles
+    #         ON payments.vehicle_plate = vehicles.plate_number
+    #         INNER JOIN employees
+    #         ON payments.check_in_employee = employees.id
+    #         INNER JOIN stations
+    #         ON payments.entry_station = stations.id
+    #         WHERE payments.exit_station = stations.id
+
+    #     """
+
+    #     rows = CURSOR.execute(sql).fetchall()
+
+    #     return [cls.instance_from_db(row) for row in rows]
+    
 
     @classmethod
     def find_by_id(cls, id):
